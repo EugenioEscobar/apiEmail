@@ -21,6 +21,14 @@ router.get('/getEnv',(req, res) => {
   res.json(process.env)
 })
 
+router.get('/debug', (req, res) => {
+  res.json({
+    origin: req.headers['origin'],
+    host: req.headers['host'],
+    referer: req.headers['referer'],
+  })
+})
+
 // POST /contacto → envía correo
 router.post('/', async (req, res, next) => {
   const { nombre, email, mensaje, empresa, website } = req.body
