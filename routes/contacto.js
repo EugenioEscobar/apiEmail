@@ -17,6 +17,10 @@ router.get('/getEmails', (req, res) => {
   })
 })
 
+router.get('/getEnv',(req, res) => {
+  res.json(process.env)
+})
+
 // POST /contacto → envía correo
 router.post('/', async (req, res, next) => {
   const { nombre, email, mensaje, empresa, website } = req.body
