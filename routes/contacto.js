@@ -12,22 +12,24 @@ router.get('/', (req, res) => {
 // GET /contacto/getEmails → quién envía y recibe
 router.get('/getEmails', (req, res) => {
   res.json({
-    from: process.env.SMTP_USER  || 'No configurado',
-    to:   process.env.SMTP_TO   || 'No configurado',
+    from: process.env.SMTP_USER || 'No configurado',
+    to: process.env.SMTP_TO || 'No configurado',
   })
 })
 
-router.get('/getEnv',(req, res) => {
-  res.json(process.env)
-})
-
-router.get('/debug', (req, res) => {
-  res.json({
-    origin: req.headers['origin'],
-    host: req.headers['host'],
-    referer: req.headers['referer'],
+if (process.env.NODE_ENV == 'development') {
+  router.get('/getEnv', (req, res) => {
+    res.json(process.env)
   })
-})
+
+  router.get('/debug', (req, res) => {
+    res.json({
+      origin: req.headers['origin'],
+      host: req.headers['host'],
+      referer: req.headers['referer'],
+    })
+  })
+}
 
 // POST /contacto → envía correo
 router.post('/', async (req, res, next) => {
@@ -45,10 +47,10 @@ router.post('/', async (req, res, next) => {
 
   try {
     await transporter.sendMail({
-      from:    `"Web Contacto" <${process.env.SMTP_USER}>`,
-      to:      process.env.SMTP_TO,
+      from: `"Web Contacto" <${process.env.SMTP_USER}>`,
+      to: process.env.SMTP_TO,
       subject: 'Nuevo mensaje de contacto',
-      html:    buildEmailHTML({ nombre, email, mensaje, empresa }),
+      html: buildEmailHTML({ nombre, email, mensaje, empresa }),
     })
 
     console.log(`[${new Date().toISOString()}] Email enviado desde ${email}`)
